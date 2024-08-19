@@ -43,6 +43,7 @@ In the folder "Kb_metadata_set" two files can be found. The files are produced b
 
 The file "Filter and clean" is a jupyter notebook that gives an example on how to filter and clean the 
 relative raw data that is stored in the file "kb_metadata_set_dan_raw.csv" that is in the folder "Kb_metadata_set".
+In the file, values ​​containing the text string "code o" are selected from the column "sub_3". "Code o" is linked to a numerical code, that is linked to a historical classification system previously used at The Royal Danish Library. By selecting only those values ​​that have "code o", the data set is reduced significantly; from 275521 rows to 87221 rows.
 
 The folder "kb_filtered_datasets" contains one csv file that is the data that have be manipulated by the script in the 
 "Filter and clean" notebook.
