@@ -54,8 +54,6 @@ The folder "kb_filtered_datasets" contains one csv file that is the data that ha
 "Filter and clean" notebook.
 
 The folder "openRefine_projects" contains two files; 1. "openrefine_operation_history.txt" and 2. "kb_metadata_dan_filtered_openrefine_v_1.csv".
-The first is the operation history made in OpenRefine on the file "kb_metadata_set_dan_raw.csv". When the file is opened in OpenRefine, 
-the operation history can be added to preform a great deal of cleaning to the dataset. The second file is the result of the operation history.
+The first is the operation history made in OpenRefine on the file "kb_metadata_set_dan_raw.csv". When the file is opened in OpenRefine, the operation history can be added to preform a great deal of cleaning to the dataset. The second file is the result of the operation history.
 
-Much more can be done to tidy up the dataset even more. For example can further cleaning be added to the columns "author_st" and title, 
-and the column sub_4 can be enriched. 
+Much more can be done to tidy up the dataset even more. For example can further cleaning be added to the columns "author_st" and title, and the column sub_4 can be enriched. 
