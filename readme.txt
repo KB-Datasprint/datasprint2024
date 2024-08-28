@@ -1,8 +1,11 @@
 This is a description of different folders with data files and files to handle the data in the folders.
+
 The folders with data are for the moment availeble for download from the page: https://silo1.sciencedata.dk/themes/deic_theme_oc7/apps/files_sharing/public.php?t=eee6d992b9dd0b9331fc92614274856a&
 
 The folder "kb_xml_files" contains xml files with metadata about historical material from The Royal Danish Library.
-The Xml files originally originate from data from the "marc records" found in the library system. 
+
+The xml files originally originate from data from the "marc records" found in the library system.
+
 The data in the "marc records" consists of numerical codes that do not make sense to people outside the library.
 
 Description of numerical codes.
@@ -20,6 +23,7 @@ Description of numerical codes.
     084 - subject field4
     700 - author tag 2 (if not content in 100 and sometimes there is data in both fields)
 
+Of these fields, only the title field (245) is mandatory, the rest of the fields may be incomplete.
 
 The file "From xml to csv" is written in jupyter notebook. 
 The file contains a short description of the various numerical codes, 
@@ -29,7 +33,8 @@ and an example of how to build a new data frame consisting of metadata about his
 
 The folder "kb_csv_files" contains csv files with metadata extracted from the xml files in the folder "kb_xml_files" 
 using a script similar to the script in the notebook "From xml to csv".
-Their are two kinds of file names i the folder. 
+
+There are two kinds of file names i the folder. 
 The first is "KB_metadata_(n)". These holds all records from the corresponding xml file.
 The second is "KB_metadata_dan(n)". These holds only those records from the corresponding xml file, 
 that holds the value 'dan' in the language column.
