@@ -1,0 +1,147 @@
+---
+title: "4 historical spelling"
+subtitle: "R-udgaven"
+format: html
+encoding: UTF-8
+---
+
+Spelling has evolved throughout history, and that is what we will explore in this notebook.
+
+We can use a visualization to gain insight into how the different spellings of various words have changed over time. We begin by deciding which words' evolution we want to investigate. We do this by looking up a dictionary that contains information about old spellings. Ordbog over det Danske Sprog - historisk ordbog 1700 - 1950 is such a dictionary.
+
+Click on the link to go to the dictionary. Enter a word in the search field. For example, it could be the word "rejse" (travel). You can read that in addition to writing the word as rejse, we have previously written it both as "reise" and "reyse".
+
+In this way, we can create a list of different historical spellings of the word "rejse"; 'rejse', 'reyse', and 'reise'.
+
+We begin by loading the dataset, which is found in the file 'kb_metadata_dan_filtered.csv'. Try to read the documentation in the script below while you run the code through. In the end, you will get a nice visualization. Can you modify the script so that you can create a visualization of the development of other words?
+
+If you need further assistance, feel free to ask!
+
+```{r libraries}
+# import libraries
+library(tidyverse)
+```
+
+```{r read-data}
+# read the data set
+df <- read.csv("data/kb_metadata_dan_filtered.csv", encoding = "UTF-8")
+```
+
+```{r look-at-data-1, eval = TRUE}
+# #inspect the dataset
+glimpse(df)
+```
+
+```{r subset-data}
+# Create a subset of the dataset (you do not need to use all columns) 
+subset <- df %>% select(title, year_st)
+```
+
+```{r filter-dataset}
+# Filter rows that have NaN values in 'year_st'
+subset <- subset %>% drop_na(year_st)
+
+```
+
+```{r sort-dataset}
+# Sort the dataset based on the 'year_st' column so that lowest value is at the top
+
+subset <- subset %>% arrange(year_st)
+```
+
+```{r inspect-subset-1, eval = TRUE}
+# Inspect the dataset
+glimpse(subset)
+```
+
+```{r filter-subset}
+# Notice that there are data errors in the 'year_st' column, so we remove years before 1600 and after 1900.
+subset <- subset %>% 
+  filter(year_st>=1600, year_st<=1900)
+```
+
+```{r inspect-subset, eval = TRUE}
+# Inspect the dataset
+glimpse(subset)
+```
+
+!NB LARS - TJEK LIGE AT INTERVALLERNE ER DE SAMME!
+
+```{r add-year-grouping}
+# Add a column with a grouping of years - interval of 5 years
+subset <- subset %>% 
+  mutate(year_group = cut(year_st, breaks = seq(from = 1600, to= 1900, by= 5))) 
+```
+
+```{r collect-titles}
+# Group by 'year_group', aggregate the 'title' column, and send back to dataframe
+grouped_subset <- subset %>% 
+  group_by(year_group) %>% 
+  summarise(title = paste(title, collapse = " "))
+```
+
+```{r inspect-grouped-subset-0}
+grouped_subset
+```
+
+```{r count-and-calc-freq}
+# Count how many times a certain word appears in the titles
+grouped_subset <- 
+  grouped_subset %>% 
+  mutate(title = str_to_lower(title)) %>% 
+  mutate(antal_ord = str_count(title, '\\w+'),
+        rejse = str_count(title, "rejse")/antal_ord,
+         reise = str_count(title, "reise")/antal_ord, 
+         reyse = str_count(title, "reyse")/antal_ord) %>% 
+  select(-antal_ord)
+  
+
+```
+
+```{r inspect-grouped-subset}
+# Inspect the dataset
+grouped_subset
+```
+
+```{r first-plot}
+grouped_subset %>%
+  ggplot(aes(x = year_group)) +
+  geom_point(aes(y = rejse, color = "rejse")) +
+  geom_line(aes(y = rejse, color = "rejse", group = "all")) +
+  geom_point(aes(y = reise, color = "reise")) +
+  geom_line(aes(y = reise, color = "reise", group = "all"))  +
+  geom_point(aes(y = reyse, color = "reyse")) +
+  geom_line(aes(y = reyse, color = "reyse", group = "all")) +
+  ggtitle("Spelling variations in titles over groups of years")+
+  labs(x = "Year group",
+       y = "Relative frequency",
+       color = "Stavemåder")+
+  theme(axis.text.x = element_text(angle = 90)) +
+   scale_color_manual(
+    values = c("rejse" = "orange",
+               "reise" = "blue",
+               "reyse" = "green")
+  )
+
+
+```
+
+Eller alternativt
+
+```{r alternative-plot}
+grouped_subset %>%
+  pivot_longer(rejse:reyse, names_to = "stavemåde", values_to = "n") %>%
+  ggplot(aes(x = year_group, y = n, color = stavemåde, group = stavemåde)) +
+  geom_point() +
+  geom_line() +
+  ggtitle("Spelling variations in titles over groups of years")+
+  labs(x = "Year group",
+       y = "Relative frequency",
+       color = "Stavemåder")+
+  theme(axis.text.x = element_text(angle = 90)) +
+  scale_x_discrete(labels = function(x){
+    labels <- gsub("[\\(\\)\\[\\]]", "", x)  # Fjern parenteser og firkantede klammer
+    labels[seq(1, length(labels), by = 2)] <- ""  # Fjern hver anden label
+    return(labels)
+    })
+```
