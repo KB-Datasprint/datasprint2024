@@ -1,0 +1,81 @@
+---
+title: "Untitled"
+author: "Christian Knudsen"
+date: "2024-09-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r indlæs_biblioteker}
+library(tidyverse)
+```
+
+```{r indlæs_data}
+df <- read_csv("data/kb_metadata_dan_filtered_openrefine_v_1.csv")
+```
+```{r subset_data_kolonner}
+subset <- df %>% select(year_st, place_st)
+```
+
+```{r fjern-na}
+subset <- subset %>% 
+  drop_na()
+```
+
+```{r filtrer-på-år}
+subset <- subset %>% 
+  filter(year_st >= 1600 & year_st <= 1900)
+```
+
+```{r sorter}
+subset <- subset %>% 
+  arrange(year_st)
+```
+
+Find unikke lokationer
+```{r}
+unique_places <- subset %>% 
+  select(place_st) %>% 
+  distinct() 
+```
+
+Så skal der geokodes
+```{r geocoding, eval = FALSE}
+library(tidygeocoder)
+geo_coded_places <- unique_places %>% 
+  geocode(place_st)
+
+```
+
+Det tager en krig, så vi har gemt resultatet, og indlæser
+det her:
+
+```{r indlæs-geodata}
+geo_coded_places <- read_csv("data/geo_data.csv")
+```
+```{r drop-na-geocode}
+df_geo <- geo_coded_places
+df_geo <- df_geo %>% 
+  drop_na()
+```
+
+Take a look at the geodata:
+```{r}
+df_geo
+```
+
+
+Join subsetted data with geo-data:
+
+```{r}
+subset_geocoded <- inner_join(subset, df_geo, by = join_by(place_st))
+```
+
+```{r}
+library(maps)
+ggplot(subset_geocoded, aes(long, lat), color = "grey99") +
+  borders("world") + geom_point()
+```
+
