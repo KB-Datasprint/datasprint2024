@@ -1,0 +1,185 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+
+```{r}
+library(tidyverse)
+library(tidytext)
+```
+
+
+- **`tidyverse`**: Loads a collection of R packages designed for data manipulation, visualization, and analysis, including tools like `ggplot2`, `dplyr`, and `readr`.
+- **`tidytext`**: Loads functions for text mining using tidy data principles, allowing structured text analysis and manipulation within the `tidyverse` framework.
+
+
+```{r}
+file_list <- list.files("kb_csv_files", full.names = T, pattern = "KB_metadata_\\d+\\.csv")
+```
+- **`list.files()`**: Lists the files in a directory.
+- **`"kb_csv_files"`**: Specifies the directory where the function will search for files.
+- **`full.names = T`**: Ensures the full file paths are returned, not just the file names.
+- **`pattern = "KB_metadata_\\d+\\.csv"`**: Filters files based on a regular expression pattern. It matches files that start with "KB_metadata_", followed by one or more digits (`\\d+`), and ending with ".csv".
+
+The result, `file_list`, will contain the full paths of all CSV files in the directory that match this pattern.
+
+
+```{r}
+KB_meta <- read_csv(file_list, id = "file_name")
+```
+
+- **`read_csv(file_list, id = "file_name")`**: Reads multiple CSV files listed in `file_list` into a single data frame (`KB_meta`).
+- **`file_list`**: Contains the paths of the CSV files to be read, typically from the previous `list.files()` function.
+- **`id = "file_name"`**: Adds a new column called `"file_name"` to the resulting data frame, indicating the source file each row came from. 
+
+The result is a combined dataset with an extra column showing the origin of each row.
+
+# Initial analysis: 
+
+```{r}
+KB_meta %>% 
+  count(language, sort = TRUE)
+```
+
+- **`KB_meta`**: Refers to the dataset being used.
+- **`%>%`**: Pipe operator, passing the data to the next function.
+- **`count(language, sort = TRUE)`**: Counts the number of occurrences for each unique value in the `language` column. The `sort = TRUE` argument sorts the result in descending order based on the count.
+
+The output will be a summary table of languages, sorted by the frequency of occurrence.
+
+
+```{r}
+KB_meta %>% 
+  count(title, sort = TRUE)
+```
+
+
+```{r}
+KB_meta <- KB_meta%>%
+  mutate(year_st = if_else(str_detect(year, "^\\d{4}"), str_extract(year, "^\\d{4}"), str_extract(year, "\\d{4}"))) 
+```
+
+- **`KB_meta %>%`**: The pipe operator is used to apply transformations to the `KB_meta` dataset.
+- **`mutate()`**: Adds or modifies a column in the dataset. In this case, it creates or updates the `year_st` column.
+- **`if_else()`**: A conditional function that assigns different values based on a condition. 
+    - **`str_detect(year, "^\\d{4}")`**: Checks if the `year` column starts with exactly four digits (e.g., a valid year format).
+    - If this condition is true, **`str_extract(year, "^\\d{4}")`** extracts the first four digits from the `year` column.
+    - If the condition is false, **`str_extract(year, "\\d{4}")`** extracts any four consecutive digits from anywhere in the `year` column.
+
+The result is a new `year_st` column containing a four-digit year, either from the start of the `year` string or from anywhere within it.
+
+
+
+```{r}
+KB_meta %>% 
+  mutate(title_length = str_length(title))  %>% 
+  group_by(year_st) %>% 
+  summarise(title_length_mean = mean(title_length)) %>% 
+  mutate(year_st = as.numeric(year_st)) %>% 
+  filter(year_st  %in% 1600:1900) %>% 
+  ggplot(aes(x = year_st, y = title_length_mean)) + 
+  geom_col(fill = "darkblue") +
+  labs(
+      title = "Average title length in characters pr. year 1600-1900",
+       subtitle = "Book titles from Royal Danish Library collection",
+      x = "Year",
+      y = "Average length in charachters") -> title_length
+
+title_length
+```
+
+### Step-by-Step Breakdown:
+
+1. **`mutate(title_length = str_length(title))`**: Adds a new column, `title_length`, which calculates the number of characters in the `title` column using the `str_length()` function.
+
+2. **`group_by(year_st)`**: Groups the data by `year_st`, allowing for summary calculations to be performed for each unique year.
+
+3. **`summarise(title_length_mean = mean(title_length))`**: For each `year_st` group, it calculates the average title length (`title_length_mean`).
+
+4. **`mutate(year_st = as.numeric(year_st))`**: Converts the `year_st` column to numeric format to ensure it can be used in a numeric range or plotted.
+
+5. **`filter(year_st %in% 1600:1900)`**: Filters the data to include only rows where the `year_st` falls between 1600 and 1900.
+
+6. **`ggplot(aes(x = year_st, y = title_length_mean))`**: Initializes a `ggplot` object to create a plot, where `year_st` is mapped to the x-axis and `title_length_mean` to the y-axis.
+
+7. **`geom_col(fill = "darkblue")`**: Creates a bar plot (column chart) with dark blue bars.
+
+8. **`labs()`**: Adds labels to the plot:
+   - `title`: Main plot title.
+   - `subtitle`: Subtitle for additional context.
+   - `x`: Label for the x-axis (Year).
+   - `y`: Label for the y-axis (Average title length in characters).
+
+9. **`-> title_length`**: Assigns the final plot to the object `title_length`.
+
+10. **`title_length`**: Displays the saved plot object.
+
+### Outcome:
+The code generates a bar plot of the average title length of books for each year between 1600 and 1900, using data from the `KB_meta` dataset. The plot is then stored in the `title_length` object and displayed.
+
+
+
+
+```{r}
+KB_meta %>% 
+  filter(language %in% c("dan", "ger", "lat", "fre", "eng")) %>% 
+  mutate(title_length = str_length(title))  %>% 
+  group_by(year_st, language) %>% 
+  summarise(title_length_mean = mean(title_length)) %>% 
+  mutate(year_st = as.numeric(year_st)) %>% 
+  filter(year_st  %in% 1600:1900) %>% 
+  ggplot(aes(x = year_st, y = title_length_mean)) + 
+  geom_col(fill = "darkblue") +
+  facet_wrap(~language) +
+    labs(
+      title = "Average title length pr. year 1600-1900 dispersed on language",
+       subtitle = "Book titles from Royal Danish Library collection",
+      x = "Year",
+      y = "Average length in charachters") -> title_length_language
+```
+
+```{r}
+title_length_language
+```
+
+### Step-by-Step Breakdown:
+
+1. **`filter(language %in% c("dan", "ger", "lat", "fre", "eng"))`**: Selects rows where the `language` column is one of "dan" (Danish), "ger" (German), "lat" (Latin), "fre" (French), or "eng" (English).
+
+2. **`mutate(title_length = str_length(title))`**: Adds a new column, `title_length`, that calculates the number of characters in each `title`.
+
+3. **`group_by(year_st, language)`**: Groups the data by both `year_st` (year) and `language`.
+
+4. **`summarise(title_length_mean = mean(title_length))`**: Computes the average title length (`title_length_mean`) for each group defined by `year_st` and `language`.
+
+5. **`mutate(year_st = as.numeric(year_st))`**: Converts the `year_st` column to numeric format for proper plotting.
+
+6. **`filter(year_st %in% 1600:1900)`**: Filters the data to include only years between 1600 and 1900.
+
+7. **`ggplot(aes(x = year_st, y = title_length_mean))`**: Initializes a `ggplot` object, mapping `year_st` to the x-axis and `title_length_mean` to the y-axis.
+
+8. **`geom_col(fill = "darkblue")`**: Creates a column (bar) plot with dark blue bars.
+
+9. **`facet_wrap(~language)`**: Creates separate panels (facets) for each language, showing the data for each language in a different plot within the same graphic.
+
+10. **`labs()`**: Adds labels to the plot:
+   - `title`: Main title of the plot.
+   - `subtitle`: Additional context or description.
+   - `x`: Label for the x-axis.
+   - `y`: Label for the y-axis.
+
+11. **`-> title_length_language`**: Saves the resulting plot as the object `title_length_language`.
+
+12. **`title_length_language`**: Displays the saved plot object.
+
+### Outcome:
+The code creates a faceted bar plot showing the average title length of books for each year between 1600 and 1900, separated by language. The plot is stored in the `title_length_language` object and displayed.
+
+
+```{r}
+ggsave("20240906_top5_language_titlelength.png", title_length_language, width = 14, height = 8)
+
+````
+
