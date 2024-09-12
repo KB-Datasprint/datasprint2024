@@ -8,7 +8,7 @@ The xml files originally originate from data from the "marc records" found in th
 
 The data in the "marc records" consists of numerical codes that do not make sense to people outside the library.
 
-Description of numerical codes.
+Description of numerical codes. 
 
     008 - a language_tag.
     041 - an additional language_tag. It occurs, for example, when 008 is taken equal to 'mul'.
