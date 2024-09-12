@@ -14,7 +14,9 @@ The different notebooks require different data, which can be downloaded from the
 * 6_title_analysis - download the "kb_csv_files.zip" 
 * 7_text_mining_on_titles - download the "kb_csv_files.zip" 
 
-
+## Tasks
+See more about the tasks here:  
+https://datasprint.kb.dk/opgaver
 
 ## Data description
 This is a description of different folders with data files and files to handle the data in the folders.
