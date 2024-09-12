@@ -1,10 +1,10 @@
 
-# Datasprint 2024 - 
+# Datasprint 2024 
 ## Which files for which notebook? 
 **Download link**
-https://silo1.sciencedata.dk/themes/deic_theme_oc7/apps/files_sharing/public.php?t=eee6d992b9dd0b9331fc92614274856a&
-(description of data further down)
-The different notebooks require different data, which can be downloaded from the link further down. 
+https://silo1.sciencedata.dk/themes/deic_theme_oc7/apps/files_sharing/public.php?t=eee6d992b9dd0b9331fc92614274856a&  
+(description of data further down)  
+The different notebooks require different data, which can be downloaded from the link further down.   
 
 * 1_From xml to csv.ipynb - download the "kb_xml_files.zip" from the link below
 * 2_From multiple csv files to one csv file.ipynb - download the "kb_csv_files.zip"
