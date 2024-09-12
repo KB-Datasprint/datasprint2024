@@ -1,3 +1,17 @@
+
+
+Which files for which notebook? 
+The different notebooks require different data, which can be downloaded from the link further down. 
+
+1_From xml to csv.ipynb - download the "kb_xml_files.zip" from the link below
+2_From multiple csv files to one csv file.ipynb - download the "kb_csv_files.zip"
+3_Filter and clean.ipynb - download the "kb_metadata_set.zip"
+4_historical_spelling - download the "kb_filtered_datasets.zip" 
+5_enrich_with_geodata - download the "openRefine_projects.zip"
+6_title_analysis - download the "kb_csv_files.zip" 
+7_text_mining_on_titles - download the "kb_csv_files.zip" 
+
+
 This is a description of different folders with data files and files to handle the data in the folders.
 
 The folders with data are for the moment available for download from this page: https://silo1.sciencedata.dk/themes/deic_theme_oc7/apps/files_sharing/public.php?t=eee6d992b9dd0b9331fc92614274856a&
