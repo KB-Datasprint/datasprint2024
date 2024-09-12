@@ -1,0 +1,204 @@
+---
+title: "Title Analysis"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(tidytext)
+library(ggwordcloud)
+```
+
+
+
+```{r}
+library(tidyverse)
+library(tidytext)
+```
+
+
+- **`tidyverse`**: Loads a collection of R packages designed for data manipulation, visualization, and analysis, including tools like `ggplot2`, `dplyr`, and `readr`.
+- **`tidytext`**: Loads functions for text mining using tidy data principles, allowing structured text analysis and manipulation within the `tidyverse` framework.
+
+
+```{r}
+file_list <- list.files("kb_csv_files", full.names = T, pattern = "KB_metadata_\\d+\\.csv")
+```
+- **`list.files()`**: Lists the files in a directory.
+- **`"kb_csv_files"`**: Specifies the directory where the function will search for files.
+- **`full.names = T`**: Ensures the full file paths are returned, not just the file names.
+- **`pattern = "KB_metadata_\\d+\\.csv"`**: Filters files based on a regular expression pattern. It matches files that start with "KB_metadata_", followed by one or more digits (`\\d+`), and ending with ".csv".
+
+The result, `file_list`, will contain the full paths of all CSV files in the directory that match this pattern.
+
+
+```{r}
+KB_meta <- read_csv(file_list, id = "file_name")
+```
+
+- **`read_csv(file_list, id = "file_name")`**: Reads multiple CSV files listed in `file_list` into a single data frame (`KB_meta`).
+- **`file_list`**: Contains the paths of the CSV files to be read, typically from the previous `list.files()` function.
+- **`id = "file_name"`**: Adds a new column called `"file_name"` to the resulting data frame, indicating the source file each row came from. 
+
+The result is a combined dataset with an extra column showing the origin of each row.
+
+
+
+# Initial analysis
+
+
+```{r}
+KB_meta %>% 
+  count(title, sort = TRUE)
+```
+```{r}
+KB_meta %>% 
+  count(author1, sort = TRUE)
+```
+
+
+In order to have more unique-titles we want to combine title and name: 
+
+```{r}
+KB_meta %>% 
+  mutate(title_author = str_c(title, year, sep = " - ")) %>% 
+  count(title_author, sort = TRUE)
+```
+
+```{r}
+KB_meta_1800 <- KB_meta %>% 
+  mutate(year_st = if_else(str_detect(year, "^\\d{4}"), str_extract(year, "^\\d{4}"), str_extract(year, "\\d{4}"))) %>% 
+  mutate(year_st = as.numeric(year_st)) %>% 
+  filter(year_st %in% 1800:1900) %>% 
+  mutate(decade = floor(year_st / 10) * 10)
+  
+```
+
+
+
+
+
+TF IDF DECADE
+
+```{r}
+KB_meta_1800 <- KB_meta_1800 %>% 
+  rename(title_kb = title)
+```
+
+
+```{r}
+tfidf_1800 <- KB_meta_1800 %>% 
+  filter(language == "dan") %>% 
+  mutate(title_kb = str_remove_all(title_kb, "\\d+")) %>% 
+  unnest_tokens(input =  title_kb, output =  word) %>% 
+  filter(str_length(word) > 5) %>% 
+  count(decade, word) %>%
+  bind_tf_idf(word, decade, n) %>%
+  arrange(desc(tf_idf))
+```
+
+
+```{r}
+KB_meta_1800 %>% 
+  filter(language == "dan") %>% 
+  group_by(decade) %>% 
+  summarise(n = n()) %>% 
+  ggplot(aes(x = decade, y = n)) +
+  geom_col() +
+  scale_x_continuous(breaks = seq(1800, 1890, by = 10))+
+  theme(axis.text.x = element_text(angle=45)) +
+  ggtitle("Titler pr. årti ")
+```
+
+
+```{r}
+tfidf_1800 %>% 
+  filter(decade != 1900) %>% 
+  mutate(word = factor(word, levels = rev(unique(word)))) %>% 
+  group_by(decade) %>% 
+  top_n(8) %>% 
+  ungroup %>%
+  ggplot(aes(label = word, size = tf_idf, color = tf_idf)) +
+  geom_text_wordcloud_area() +
+  scale_size_area(max_size = 20) +
+  theme_minimal() +
+  facet_wrap(~decade, ncol = 3, scales = "free") +
+  scale_color_gradient(low = "darkgoldenrod2", high = "darkgoldenrod4") +
+  labs(
+      title = "St. Croix Avis: most important words pr. month",
+       subtitle = "Importance determined by term frequency (tf) - inversed document frequency(idf)",
+      caption = "Data from Mediestream Experimental API")
+```
+
+```{r}
+KB_meta_1800 %>% 
+  filter(str_detect(title_kb, regex("oversat", ignore_case = TRUE))) %>% 
+  group_by(decade) %>% 
+  summarise(n = n()) %>% 
+  ggplot(aes(x = decade, y = n)) +
+  geom_col() +
+  scale_x_continuous(breaks = seq(1800, 1890, by = 10))+
+  theme(axis.text.x = element_text(angle=45)) +
+  ggtitle("Danske titler hvor ordet 'oversat' indgår 1800:1900", subtitle = "fordel på årtier")
+```
+
+
+```{r}
+tfidf_1800_trans <- KB_meta_1800 %>% 
+  filter(str_detect(title_kb, regex("oversat", ignore_case = TRUE))) %>% 
+  filter(language == "dan") %>% 
+  mutate(title_kb = str_remove_all(title_kb, "\\d+")) %>% 
+  unnest_tokens(input =  title_kb, output =  word) %>% 
+  filter(str_length(word) > 5) %>% 
+  count(decade, word) %>%
+  bind_tf_idf(word, decade, n) %>%
+  arrange(desc(tf_idf))
+```
+
+
+
+
+```{r}
+tfidf_1800_trans %>% 
+  filter(decade != 1900) %>% 
+  mutate(word = factor(word, levels = rev(unique(word)))) %>% 
+  group_by(decade) %>% 
+  top_n(8) %>% 
+  ungroup %>%
+  ggplot(aes(label = word, size = tf_idf, color = tf_idf)) +
+  geom_text_wordcloud_area() +
+  scale_size_area(max_size = 10) +
+  theme_minimal() +
+  facet_wrap(~decade, ncol = 3, scales = "free") +
+  scale_color_gradient(low = "darkgoldenrod2", high = "darkgoldenrod4") +
+  labs(
+      title = "St. Croix Avis: most important words pr. month",
+       subtitle = "Importance determined by term frequency (tf) - inversed document frequency(idf)",
+      caption = "Data from Mediestream Experimental API")
+```
+
+
+```{r}
+KB_meta_1800 %>% 
+  filter(str_detect(title_kb, regex("oversat", ignore_case = TRUE))) %>% 
+  filter(language == "dan") %>% 
+  mutate(title_kb = str_remove_all(title_kb, "\\d+")) %>% 
+  unnest_tokens(input =  title_kb, output =  word) %>% 
+  filter(str_length(word) > 5) %>% 
+  count(word, sort = TRUE)
+```
+
+
+```{r}
+KB_meta_1800 %>% 
+  filter(language == "dan") %>% 
+  filter(str_detect(title_kb, regex("oversat", ignore_case = TRUE))) %>% 
+  filter(str_detect(title_kb, regex("engelske", ignore_case = TRUE))) %>% 
+  mutate(title_kb = str_remove_all(title_kb, "\\d+")) %>% 
+  unnest_tokens(input =  title_kb, output =  word) %>% 
+  filter(str_length(word) > 5) %>% 
+  count(word, sort = TRUE)
+
+```
+
