@@ -1,6 +1,6 @@
 This is a description of different folders with data files and files to handle the data in the folders.
 
-The folders with data are for the moment availeble for download from the page: https://silo1.sciencedata.dk/themes/deic_theme_oc7/apps/files_sharing/public.php?t=eee6d992b9dd0b9331fc92614274856a&
+The folders with data are for the moment available for download from this page: https://silo1.sciencedata.dk/themes/deic_theme_oc7/apps/files_sharing/public.php?t=eee6d992b9dd0b9331fc92614274856a&
 
 The folder "kb_xml_files" contains xml files with metadata about historical material from The Royal Danish Library.
 
