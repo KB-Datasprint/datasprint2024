@@ -1,30 +1,6 @@
 
 # Datasprint 2024 
 
-## Setup
-Python notebooks can run with Python version 3.11. The following libraries are used:
-
-- os
-- pandas
-- BeautifulSoup
-- re
-- geopy
-- glob
-- matplotlib
-- warnings
-- jupyterlab
-
-R markdown can run with R version 4.4. The following packages are used.
-- tidyverse
-- tidygeocoder
-- tidytext
-- ggwordcloud
-
-Orange workflows are made in Orange version 3.36.2. The following add ons are installed:
-- Geo
-
-OpenRefine cleanups were done with version 3.8.2.
-
 ## Dataset appetizer
 
 The dataset is based on the Royal Library's bibliographic records from around 1600 to 1900,
@@ -123,3 +99,27 @@ The folder "openRefine_projects" contains two files; 1. "openrefine_operation_hi
 The first is the operation history made in OpenRefine on the file "kb_metadata_set_dan_raw.csv". When the file is opened in OpenRefine, the operation history can be added to preform a great deal of cleaning to the dataset. The second file is the result of the operation history.
 
 Much more can be done to tidy up the dataset even more. For example can further cleaning be added to the columns "author_st" and title, and the column sub_4 can be enriched. 
+
+## Setup
+Python notebooks can run with Python version 3.11. The following libraries are used:
+
+- os
+- pandas
+- BeautifulSoup
+- re
+- geopy
+- glob
+- matplotlib
+- warnings
+- jupyterlab
+
+R markdown can run with R version 4.4. The following packages are used.
+- tidyverse
+- tidygeocoder
+- tidytext
+- ggwordcloud
+
+Orange workflows are made in Orange version 3.36.2. The following add ons are installed:
+- Geo
+
+OpenRefine cleanups were done with version 3.8.2.
