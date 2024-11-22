@@ -19,7 +19,9 @@ See more about the tasks here:
 https://datasprint.kb.dk/opgaver
 
 ## Data description
-This is a description of different folders with data files and files to handle the data in the folders.
+Raw data comes from a snapshot extract from the library system from September 2023.
+
+Here follows a description of different folders with data files and files to handle the data in the folders.
 
 The folders with data are for the moment available for download from this page: https://silo1.sciencedata.dk/themes/deic_theme_oc7/apps/files_sharing/public.php?t=eee6d992b9dd0b9331fc92614274856a&
 
@@ -44,9 +46,9 @@ Description of numerical codes.
     084 - subject field4
     700 - author tag 2 (if not content in 100 and sometimes there is data in both fields)
 
-An MMS ID could have been part of the individual records. Every record in the library system has an MMS ID, and if the MMS ID had been part of each record, then you would have had a reference back to the library system.
-
 Of these fields, only the title field (245) is mandatory, the rest of the fields may be incomplete.
+
+An MMS ID could have been part of the individual records. Every record in the library system has an MMS ID, and if the MMS ID had been part of each record, then you would have had a reference back to the library system.
 
 The file "From xml to csv" is written in jupyter notebook. 
 The file contains a short description of the various numerical codes, 
