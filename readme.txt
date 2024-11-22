@@ -1,18 +1,45 @@
 
+# Datasprint 2024 
 
-Which files for which notebook? 
-The different notebooks require different data, which can be downloaded from the link further down. 
+## Dataset appetizer
 
-1_From xml to csv.ipynb - download the "kb_xml_files.zip" from the link below
-2_From multiple csv files to one csv file.ipynb - download the "kb_csv_files.zip"
-3_Filter and clean.ipynb - download the "kb_metadata_set.zip"
-4_historical_spelling - download the "kb_filtered_datasets.zip" 
-5_enrich_with_geodata - download the "openRefine_projects.zip"
-6_title_analysis - download the "kb_csv_files.zip" 
-7_text_mining_on_titles - download the "kb_csv_files.zip" 
+The dataset is based on the Royal Library's bibliographic records from around 1600 to 1900,
+and can be used to investigate:
+
+### Historical spellings:
+how do different spellings relate to different historical periods?
+An example is a word like reyse, reise or rejse.
+The different spellings have been used simultaneously, but to different extents.
+With the dataset we can investigate when we started writing rejse with j.
+
+### Spatial studies of places of publication:
+In which cities is literature published?
+How does this relate to the history of Denmark, and concepts such as emigration, colonies and differences between center and periphery.
 
 
-This is a description of different folders with data files and files to handle the data in the folders.
+
+## Which files for which notebook? 
+**Download link**
+https://silo1.sciencedata.dk/themes/deic_theme_oc7/apps/files_sharing/public.php?t=eee6d992b9dd0b9331fc92614274856a&  
+(description of data further down)  
+The different notebooks require different data, which can be downloaded from the link further down.   
+
+* 1_From xml to csv.ipynb - download the "kb_xml_files.zip" from the link below
+* 2_From multiple csv files to one csv file.ipynb - download the "kb_csv_files.zip"
+* 3_Filter and clean.ipynb - download the "kb_metadata_set.zip"
+* 4_historical_spelling - download the "kb_filtered_datasets.zip" 
+* 5_enrich_with_geodata - download the "openRefine_projects.zip"
+* 6_title_analysis - download the "kb_csv_files.zip" 
+* 7_text_mining_on_titles - download the "kb_csv_files.zip" 
+
+## Tasks
+See more about the tasks here:  
+https://datasprint.kb.dk/opgaver
+
+## Data description
+Raw data comes from a snapshot extract from the library system from September 2023.
+
+Here follows a description of different folders with data files and files to handle the data in the folders.
 
 The folders with data are for the moment available for download from this page: https://silo1.sciencedata.dk/themes/deic_theme_oc7/apps/files_sharing/public.php?t=eee6d992b9dd0b9331fc92614274856a&
 
@@ -39,11 +66,12 @@ Description of numerical codes.
 
 Of these fields, only the title field (245) is mandatory, the rest of the fields may be incomplete.
 
+An MMS ID could have been part of the individual records. Every record in the library system has an MMS ID, and if the MMS ID had been part of each record, then you would have had a reference back to the library system.
+
 The file "From xml to csv" is written in jupyter notebook. 
 The file contains a short description of the various numerical codes, 
 an example of how the xml files in the folder "kb_xml_files" can be loaded into a Pandas dataframe using Python; 
 and an example of how to build a new data frame consisting of metadata about historical Danish literature.
-
 
 The folder "kb_csv_files" contains csv files with metadata extracted from the xml files in the folder "kb_xml_files" 
 using a script similar to the script in the notebook "From xml to csv".
@@ -71,3 +99,27 @@ The folder "openRefine_projects" contains two files; 1. "openrefine_operation_hi
 The first is the operation history made in OpenRefine on the file "kb_metadata_set_dan_raw.csv". When the file is opened in OpenRefine, the operation history can be added to preform a great deal of cleaning to the dataset. The second file is the result of the operation history.
 
 Much more can be done to tidy up the dataset even more. For example can further cleaning be added to the columns "author_st" and title, and the column sub_4 can be enriched. 
+
+## Setup
+Python notebooks can run with Python version 3.11. The following libraries are used:
+
+- os
+- pandas
+- BeautifulSoup
+- re
+- geopy
+- glob
+- matplotlib
+- warnings
+- jupyterlab
+
+R markdown can run with R version 4.4. The following packages are used.
+- tidyverse
+- tidygeocoder
+- tidytext
+- ggwordcloud
+
+Orange workflows are made in Orange version 3.36.2. The following add ons are installed:
+- Geo
+
+OpenRefine cleanups were done with version 3.8.2.
