@@ -1,5 +1,47 @@
 
 # Datasprint 2024 
+
+## Setup
+Python notebooks can run with Python version 3.11. The following libraries are used:
+
+- os
+- pandas
+- BeautifulSoup
+- re
+- geopy
+- glob
+- matplotlib
+- warnings
+- jupyterlab
+
+R markdown can run with R version 4.4. The following packages are used.
+- tidyverse
+- tidygeocoder
+- tidytext
+- ggwordcloud
+
+Orange workflows are made in Orange version 3.36.2. The following add ons are installed:
+- Geo
+
+OpenRefine cleanups were done with version 3.8.2.
+
+## Dataset appetizer
+
+The dataset is based on the Royal Library's bibliographic records from around 1600 to 1900,
+and can be used to investigate:
+
+### Historical spellings:
+how do different spellings relate to different historical periods?
+An example is a word like reyse, reise or rejse.
+The different spellings have been used simultaneously, but to different extents.
+With the dataset we can investigate when we started writing rejse with j.
+
+### Spatial studies of places of publication:
+In which cities is literature published?
+How does this relate to the history of Denmark, and concepts such as emigration, colonies and differences between center and periphery.
+
+
+
 ## Which files for which notebook? 
 **Download link**
 https://silo1.sciencedata.dk/themes/deic_theme_oc7/apps/files_sharing/public.php?t=eee6d992b9dd0b9331fc92614274856a&  
