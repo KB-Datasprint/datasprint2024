@@ -44,13 +44,14 @@ Description of numerical codes.
     084 - subject field4
     700 - author tag 2 (if not content in 100 and sometimes there is data in both fields)
 
+An MMS ID could have been part of the individual records. Every record in the library system has an MMS ID, and if the MMS ID had been part of each record, then you would have had a reference back to the library system.
+
 Of these fields, only the title field (245) is mandatory, the rest of the fields may be incomplete.
 
 The file "From xml to csv" is written in jupyter notebook. 
 The file contains a short description of the various numerical codes, 
 an example of how the xml files in the folder "kb_xml_files" can be loaded into a Pandas dataframe using Python; 
 and an example of how to build a new data frame consisting of metadata about historical Danish literature.
-
 
 The folder "kb_csv_files" contains csv files with metadata extracted from the xml files in the folder "kb_xml_files" 
 using a script similar to the script in the notebook "From xml to csv".
